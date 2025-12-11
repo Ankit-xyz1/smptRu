@@ -80,7 +80,7 @@ async function sendTestEmail() {
 
   const result = await transporter.sendMail({
     from: `Tester <tester@${DOMAIN}>`,
-    to: "yourgmail@gmail.com",   // CHANGE THIS
+    to: "shahankit023@gmail.com",   // CHANGE THIS
     subject: "🔥 Full DKIM + SPF Test Email",
     html: "<h2>This is a real DKIM signed email from AWS EC2!</h2>",
   });
