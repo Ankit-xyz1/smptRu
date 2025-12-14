@@ -89,11 +89,40 @@ async function sendTestEmail() {
   console.log(result);
 }
 
+const tester = async () => {
+  if (!fs.existsSync(DB_FILE)) {
+    console.error("❌ Run generate first: npx ts-node index.ts generate");
+    return;
+  }
+
+  const auth = JSON.parse(fs.readFileSync(DB_FILE, "utf8"));
+  const transporter = nodemailer.createTransport({
+    host: "127.0.0.1",   // IMPORTANT: use localhost on EC2
+    port: 587,
+    secure: false,
+    tls: { rejectUnauthorized: false },
+    dkim: {
+      domainName: "ankit.club",
+      keySelector: "yoursvc1",
+      privateKey: auth.privateKey,
+    },
+  });
+
+  const result = await transporter.sendMail({
+    from: "Ankit <hello@ankit.club>",
+    to: "shahankit023@gmail.com",
+    subject: "Hello from my own domain",
+    text: "This email is sent from my own mail server for testing",
+  });
+  console.log("✔ Email sent. Check Gmail → Show original.");
+  console.log(result);
+}
 // ===============================
 // CLI Handler
 // ===============================
 const command = process.argv[2];
 if (command === "generate") generateDKIM();
 else if (command === "test") sendTestEmail();
+else if (command === "test2") tester();
 else console.log("Usage: npx ts-node test-mail.ts generate | test");
 
